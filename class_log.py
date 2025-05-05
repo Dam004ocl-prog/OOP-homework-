@@ -7,6 +7,19 @@ class Student:
         self.courses_in_progress = []
         self.grades = {}
 
+    def rate_lecturer(self, lecturer, course, grade):
+        if isinstance(lecturer, Lecturer) and \
+           course in self.courses_in_progress and \
+           course in lecturer.courses_attached and \
+           1 <= grade <= 10:
+
+            if course in lecturer.grades:
+                lecturer.grades[course] += [grade]
+            else:
+                lecturer.grades[course] = [grade]
+        else:
+            return 'Ошибка'
+
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
@@ -14,11 +27,16 @@ class Mentor:
         self.courses_attached = []
 
 class Lecturer(Mentor):
-    pass  
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.grades = {}
 
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
-        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+        if isinstance(student, Student) and \
+           course in self.courses_attached and \
+           course in student.courses_in_progress:
+
             if course in student.grades:
                 student.grades[course] += [grade]
             else:
@@ -26,15 +44,20 @@ class Reviewer(Mentor):
         else:
             return 'Ошибка'
 
-# Тестирование системы
-best_student = Student('Ruoy', 'Eman', 'your_gender')
-best_student.courses_in_progress += ['Python']
+lecturer = Lecturer('Hannibal', 'Lecter')
+lecturer.courses_attached += ['Python']
 
-cool_reviewer = Reviewer('Some', 'Buddy')
-cool_reviewer.courses_attached += ['Python']
+reviewer = Reviewer('Indiana', 'Jones')
+reviewer.courses_attached += ['Python']
 
-cool_reviewer.rate_hw(best_student, 'Python', 10)
-cool_reviewer.rate_hw(best_student, 'Python', 10)
-cool_reviewer.rate_hw(best_student, 'Python', 10)
+student = Student('James', 'Bond', 'male')
+student.courses_in_progress += ['Python']
 
-print(best_student.grades)  # Вывод: {'Python': [10, 10, 10]}
+reviewer.rate_hw(student, 'Python', 10)
+reviewer.rate_hw(student, 'Python', 9)
+
+student.rate_lecturer(lecturer, 'Python', 10)
+student.rate_lecturer(lecturer, 'Python', 9)
+
+print("Оценки студента:", student.grades)
+print("Оценки лектора:", lecturer.grades)
