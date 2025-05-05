@@ -93,4 +93,4 @@ student.rate_lecturer(lecturer, 'Python', 9)
 
 print(lecturer)
 print(student)
-print(lecturer > Lecturer("Clarice", "Lecter"))
+print(lecturer > Lecturer("Starling ", "Lecter"))
